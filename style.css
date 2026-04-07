@@ -302,3 +302,13 @@ button[type="submit"]:focus-visible {
         padding: var(--spacing-md) var(--spacing-lg);
     }
 }
+/* Fix: Ensure empty state displays correctly */
+.empty-state[hidden] {
+    display: none;
+}
+/* Remove the previous rule that was hiding task-list */
+/* Remove this rule:
+.empty-state:not([hidden]) ~ .task-list {
+    display: none;
+}
+*/

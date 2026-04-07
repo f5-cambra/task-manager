@@ -35,35 +35,16 @@
             
             <!-- Task List -->
             <ul id="taskList" class="task-list">
-                <!-- Example task items for styling (will be replaced by JavaScript) -->
-                <li class="task-item">
-                    <input 
-                        type="checkbox" 
-                        id="task-1" 
-                        class="task-checkbox"
-                    >
-                    <label for="task-1" class="task-label">
-                        Example task: Buy groceries
-                    </label>
-                </li>
-                <li class="task-item">
-                    <input 
-                        type="checkbox" 
-                        id="task-2" 
-                        class="task-checkbox"
-                        checked
-                    >
-                    <label for="task-2" class="task-label task-label--completed">
-                        Example task: Read documentation
-                    </label>
-                </li>
+                <!-- Tasks will be added here dynamically -->
             </ul>
 
             <!-- Empty State -->
-            <div id="emptyState" class="empty-state" hidden>
+            <div id="emptyState" class="empty-state">
                 <p>No tasks yet. Add your first task above! ✨</p>
             </div>
         </section>
     </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
