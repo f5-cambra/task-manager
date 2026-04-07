@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Manager</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple task manager to organize your daily tasks">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Task Manager</h1>
+    <main>
+        <h1>Task Manager</h1>
+        
+        <!-- Task Input Form -->
+        <form id="taskForm">
+            <label for="taskDescription">
+                Task Description
+            </label>
+            <input 
+                type="text" 
+                id="taskDescription" 
+                name="taskDescription"
+                placeholder="What needs to be done?"
+                required
+                autofocus
+            >
+            <button type="submit">
+                Add Task
+            </button>
+        </form>
+    </main>
 </body>
 </html>
