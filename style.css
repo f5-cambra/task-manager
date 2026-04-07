@@ -312,3 +312,120 @@ button[type="submit"]:focus-visible {
     display: none;
 }
 */
+
+/* ... all previous styles remain the same ... */
+
+/* Update Task Item to accommodate delete button */
+.task-item {
+    background: var(--color-background);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    transition: all var(--transition-base);
+    position: relative; /* For delete button positioning */
+}
+
+/* Add completed state for task item */
+.task-item--completed {
+    opacity: 0.8;
+}
+
+/* Delete Button Styles */
+.task-delete-btn {
+    /* Positioning */
+    margin-left: auto; /* Push to the right */
+    flex-shrink: 0;
+    
+    /* Sizing */
+    width: 2rem;
+    height: 2rem;
+    
+    /* Appearance */
+    background: var(--purple-100);
+    color: var(--purple-700);
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    
+    /* Typography */
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    
+    /* Interaction */
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    
+    /* Flexbox for centering the × */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Delete Button Hover State */
+.task-delete-btn:hover {
+    background: var(--purple-600);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Delete Button Focus State */
+.task-delete-btn:focus-visible {
+    outline: 2px solid var(--purple-400);
+    outline-offset: 2px;
+}
+
+/* Delete Button Active State */
+.task-delete-btn:active {
+    transform: scale(0.95);
+}
+
+/* Completed task delete button - more subtle */
+.task-item--completed .task-delete-btn {
+    opacity: 0.5;
+}
+
+.task-item--completed .task-delete-btn:hover {
+    opacity: 1;
+    background: var(--purple-600);
+    color: white;
+}
+
+/* Hide delete button by default on mobile, show on hover/focus */
+@media (max-width: 639px) {
+    .task-delete-btn {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    
+    .task-item:hover .task-delete-btn,
+    .task-item:focus-within .task-delete-btn,
+    .task-delete-btn:focus {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Ensure task label doesn't overlap with delete button */
+.task-label {
+    flex: 1;
+    cursor: pointer;
+    color: var(--color-text);
+    user-select: none;
+    transition: all var(--transition-base);
+    padding-right: var(--spacing-sm); /* Add some space from delete button */
+}
+
+/* Animation for task removal */
+@keyframes slideOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.task-item--removing {
+    animation: slideOut var(--transition-base) ease-out;
+}

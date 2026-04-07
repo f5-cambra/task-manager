@@ -27,6 +27,7 @@ const TaskManager = {
     bindEvents() {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         this.taskList.addEventListener('change', (e) => this.handleCheckboxChange(e));
+        this.taskList.addEventListener('click', (e) => this.handleTaskClick(e));
     },
     
     // Load tasks from localStorage
@@ -92,6 +93,37 @@ const TaskManager = {
         }
     },
     
+    // Handle clicks on task items (for delete button)
+    handleTaskClick(event) {
+        // Check if delete button was clicked
+        if (event.target.classList.contains('task-delete-btn')) {
+            const taskId = parseInt(event.target.dataset.taskId);
+            this.deleteTask(taskId);
+        }
+    },
+    
+    // Delete a task
+    deleteTask(taskId) {
+        const taskIndex = this.tasks.findIndex(t => t.id === taskId);
+        
+        if (taskIndex > -1) {
+            const task = this.tasks[taskIndex];
+            
+            // Optional: Add confirmation for non-completed tasks
+            if (!task.completed) {
+                const confirmDelete = confirm(`Delete "${task.text}"?`);
+                if (!confirmDelete) {
+                    return;
+                }
+            }
+            
+            // Remove task from array
+            this.tasks.splice(taskIndex, 1);
+            this.saveTasks();
+            this.render();
+        }
+    },
+    
     // Toggle task completion
     toggleTask(taskId) {
         const task = this.tasks.find(t => t.id === taskId);
@@ -130,7 +162,7 @@ const TaskManager = {
         const completedClass = task.completed ? 'task-label--completed' : '';
         
         return `
-            <li class="task-item">
+            <li class="task-item ${task.completed ? 'task-item--completed' : ''}">
                 <input 
                     type="checkbox" 
                     id="task-${task.id}" 
@@ -141,6 +173,14 @@ const TaskManager = {
                 <label for="task-${task.id}" class="task-label ${completedClass}">
                     ${this.escapeHTML(task.text)}
                 </label>
+                <button 
+                    class="task-delete-btn"
+                    data-task-id="${task.id}"
+                    aria-label="Delete task: ${this.escapeHTML(task.text)}"
+                    title="Delete task"
+                >
+                    ×
+                </button>
             </li>
         `;
     },
