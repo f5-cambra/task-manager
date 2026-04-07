@@ -3,10 +3,14 @@ const TaskManager = {
     // Array to store tasks
     tasks: [],
     
+    // localStorage key
+    STORAGE_KEY: 'taskManager_tasks',
+    
     // Initialize the app
     init() {
         this.cacheDOMElements();
         this.bindEvents();
+        this.loadTasks();
         this.render();
     },
     
@@ -23,6 +27,33 @@ const TaskManager = {
     bindEvents() {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         this.taskList.addEventListener('change', (e) => this.handleCheckboxChange(e));
+    },
+    
+    // Load tasks from localStorage
+    loadTasks() {
+        try {
+            const stored = localStorage.getItem(this.STORAGE_KEY);
+            if (stored) {
+                this.tasks = JSON.parse(stored);
+                // Convert date strings back to Date objects
+                this.tasks.forEach(task => {
+                    task.createdAt = new Date(task.createdAt);
+                });
+            }
+        } catch (error) {
+            console.error('Error loading tasks from localStorage:', error);
+            this.tasks = [];
+        }
+    },
+    
+    // Save tasks to localStorage
+    saveTasks() {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.tasks));
+        } catch (error) {
+            console.error('Error saving tasks to localStorage:', error);
+            // Could show a user-friendly error message here
+        }
     },
     
     // Handle form submission
@@ -49,6 +80,7 @@ const TaskManager = {
         };
         
         this.tasks.unshift(task); // Add to beginning of array
+        this.saveTasks(); // Save to localStorage
         this.render();
     },
     
@@ -65,6 +97,7 @@ const TaskManager = {
         const task = this.tasks.find(t => t.id === taskId);
         if (task) {
             task.completed = !task.completed;
+            this.saveTasks(); // Save to localStorage
             this.render();
         }
     },
@@ -117,10 +150,52 @@ const TaskManager = {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    },
+    
+    // Clear all tasks (utility method for future use)
+    clearAllTasks() {
+        if (confirm('Are you sure you want to delete all tasks?')) {
+            this.tasks = [];
+            this.saveTasks();
+            this.render();
+        }
+    },
+    
+    // Export tasks (utility method for future use)
+    exportTasks() {
+        return JSON.stringify(this.tasks, null, 2);
+    },
+    
+    // Import tasks (utility method for future use)
+    importTasks(jsonString) {
+        try {
+            const imported = JSON.parse(jsonString);
+            if (Array.isArray(imported)) {
+                this.tasks = imported;
+                this.saveTasks();
+                this.render();
+                return true;
+            }
+        } catch (error) {
+            console.error('Error importing tasks:', error);
+        }
+        return false;
     }
 };
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     TaskManager.init();
+    
+    // Optional: Show storage info in console
+    console.log(`Task Manager initialized. ${TaskManager.tasks.length} task(s) loaded from localStorage.`);
+});
+
+// Optional: Handle storage events (if user has multiple tabs open)
+window.addEventListener('storage', (e) => {
+    if (e.key === TaskManager.STORAGE_KEY) {
+        TaskManager.loadTasks();
+        TaskManager.render();
+        console.log('Tasks updated from another tab');
+    }
 });
